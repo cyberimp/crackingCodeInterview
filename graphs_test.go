@@ -102,7 +102,7 @@ func Test_binaryTreeIntoLists(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			if got := binaryTreeIntoLists(test.args.tree); !reflect.DeepEqual(got, test.want) {
-				t.Errorf("binaryTreeIntoLists() = %#v, want %v", got, test.want)
+				t.Errorf("binaryTreeIntoLists() = %v, want %v", got, test.want)
 			}
 		})
 	}
