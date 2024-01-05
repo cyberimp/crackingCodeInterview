@@ -54,11 +54,11 @@ func makeBST(values []int) string {
 }
 
 func binaryTreeIntoLists(tree string) [][]int {
-	var root TreeNode
+	var root *TreeNode
 	_ = json.Unmarshal([]byte(tree), &root)
 	result := make([][]int, 0)
 	var curRow []*TreeNode
-	var nextRow = []*TreeNode{&root}
+	var nextRow = []*TreeNode{root}
 	deep := 0
 	for len(nextRow) > 0 {
 		curRow = nextRow
@@ -78,4 +78,27 @@ func binaryTreeIntoLists(tree string) [][]int {
 		deep++
 	}
 	return result
+}
+
+func checkBinaryTree(tree string) bool {
+	var root *TreeNode
+	_ = json.Unmarshal([]byte(tree), &root)
+	queue := []*TreeNode{root}
+	var head *TreeNode
+	for len(queue) > 0 {
+		head, queue = queue[0], queue[1:]
+		if head.Left != nil {
+			if head.Left.Val > head.Val {
+				return false
+			}
+			queue = append(queue, head.Left)
+		}
+		if head.Right != nil {
+			if head.Right.Val < head.Val {
+				return false
+			}
+			queue = append(queue, head.Left)
+		}
+	}
+	return true
 }
