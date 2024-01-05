@@ -29,21 +29,21 @@ func isPassable(edges [][]int, s int, t int) bool {
 	return visited[t]
 }
 
-type Node struct {
-	Left  *Node `json:"left,omitempty"`
-	Right *Node `json:"right,omitempty"`
-	Value int   `json:"value"`
+type TreeNode struct {
+	Val   int       `json:"value"`
+	Left  *TreeNode `json:"left,omitempty"`
+	Right *TreeNode `json:"right,omitempty"`
 }
 
-func makeNode(values []int) *Node {
+func makeNode(values []int) *TreeNode {
 	if len(values) == 0 {
 		return nil
 	}
 	if len(values) == 1 {
-		return &Node{nil, nil, values[0]}
+		return &TreeNode{values[0], nil, nil}
 	}
 	middle := len(values) / 2
-	return &Node{makeNode(values[:middle]), makeNode(values[middle+1:]), values[middle]}
+	return &TreeNode{values[middle], makeNode(values[:middle]), makeNode(values[middle+1:])}
 
 }
 
@@ -54,19 +54,19 @@ func makeBST(values []int) string {
 }
 
 func binaryTreeIntoLists(tree string) [][]int {
-	var root Node
+	var root TreeNode
 	_ = json.Unmarshal([]byte(tree), &root)
 	result := make([][]int, 0)
-	var curRow []*Node
-	var nextRow = []*Node{&root}
+	var curRow []*TreeNode
+	var nextRow = []*TreeNode{&root}
 	deep := 0
 	for len(nextRow) > 0 {
 		curRow = nextRow
-		nextRow = make([]*Node, 0)
+		nextRow = make([]*TreeNode, 0)
 		result = append(result, make([]int, 0))
 
 		for _, node := range curRow {
-			result[deep] = append(result[deep], node.Value)
+			result[deep] = append(result[deep], node.Val)
 			if node.Left != nil {
 				nextRow = append(nextRow, node.Left)
 			}
