@@ -102,3 +102,63 @@ func checkBinaryTree(tree string) bool {
 	}
 	return true
 }
+
+type backTreeNode struct {
+	Val   int
+	Left  *backTreeNode
+	Right *backTreeNode
+	Up    *backTreeNode
+}
+
+func convertTree(root *TreeNode, ancestor *backTreeNode) *backTreeNode {
+	if root == nil {
+		return nil
+	}
+	result := &backTreeNode{
+		root.Val,
+		nil,
+		nil,
+		ancestor,
+	}
+
+	result.Left = convertTree(root.Left, result)
+	result.Right = convertTree(root.Right, result)
+
+	return result
+}
+
+func findValInBackTree(root *backTreeNode, val int) *backTreeNode {
+	switch {
+	case root == nil:
+		return nil
+	case root.Val > val:
+		return findValInBackTree(root.Left, val)
+	case root.Val < val:
+		return findValInBackTree(root.Right, val)
+	default:
+		return root
+	}
+}
+
+func findNext(tree string, val int) int {
+	var root *TreeNode
+	_ = json.Unmarshal([]byte(tree), &root)
+	backTree := convertTree(root, nil)
+	node := findValInBackTree(backTree, val)
+	if node == nil {
+		return -1
+	}
+	if node.Right != nil {
+		return node.Right.Val
+	}
+
+	for node.Up != nil && node.Up.Right == node {
+		node = node.Up
+	}
+
+	if node.Up != nil {
+		return node.Up.Val
+	}
+
+	return -1
+}
