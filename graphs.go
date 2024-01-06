@@ -83,6 +83,7 @@ func binaryTreeIntoLists(tree string) [][]int {
 func checkBinaryTree(tree string) bool {
 	var root *TreeNode
 	_ = json.Unmarshal([]byte(tree), &root)
+
 	queue := []*TreeNode{root}
 	var head *TreeNode
 	for len(queue) > 0 {
@@ -97,7 +98,7 @@ func checkBinaryTree(tree string) bool {
 			if head.Right.Val < head.Val {
 				return false
 			}
-			queue = append(queue, head.Left)
+			queue = append(queue, head.Right)
 		}
 	}
 	return true
@@ -149,7 +150,11 @@ func findNext(tree string, val int) int {
 		return -1
 	}
 	if node.Right != nil {
-		return node.Right.Val
+		node = node.Right
+		for node.Left != nil {
+			node = node.Left
+		}
+		return node.Val
 	}
 
 	for node.Up != nil && node.Up.Right == node {
