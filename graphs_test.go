@@ -158,6 +158,11 @@ func Test_checkBinaryTree(t *testing.T) {
 			args{`{"value":5,"right":{"value":10,"left":{"value":7,"right":{"value":9,"left":{"value":8}}}}}`},
 			true,
 		},
+		{
+			"check more stupid tree",
+			args{`{"value":5,"right":{"value":10,"left":{"value":7,"right":{"value":11,"left":{"value":8}}}}}`},
+			false,
+		},
 	}
 	for _, test := range tests {
 		t.Run(

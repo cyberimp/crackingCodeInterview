@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"math"
 )
 
 func isPassable(edges [][]int, s int, t int) bool {
@@ -80,6 +81,44 @@ func binaryTreeIntoLists(tree string) [][]int {
 	return result
 }
 
+func findMax(root *TreeNode) int {
+	result := math.MinInt
+	queue := []*TreeNode{root}
+	var head *TreeNode
+	for len(queue) > 0 {
+		head, queue = queue[0], queue[1:]
+		if head.Val > result {
+			result = head.Val
+		}
+		if head.Left != nil {
+			queue = append(queue, head.Left)
+		}
+		if head.Right != nil {
+			queue = append(queue, head.Right)
+		}
+	}
+	return result
+}
+
+func findMin(root *TreeNode) int {
+	result := math.MaxInt
+	queue := []*TreeNode{root}
+	var head *TreeNode
+	for len(queue) > 0 {
+		head, queue = queue[0], queue[1:]
+		if head.Val < result {
+			result = head.Val
+		}
+		if head.Left != nil {
+			queue = append(queue, head.Left)
+		}
+		if head.Right != nil {
+			queue = append(queue, head.Right)
+		}
+	}
+	return result
+}
+
 func checkBinaryTree(tree string) bool {
 	var root *TreeNode
 	_ = json.Unmarshal([]byte(tree), &root)
@@ -89,13 +128,13 @@ func checkBinaryTree(tree string) bool {
 	for len(queue) > 0 {
 		head, queue = queue[0], queue[1:]
 		if head.Left != nil {
-			if head.Left.Val > head.Val {
+			if findMax(head.Left) > head.Val {
 				return false
 			}
 			queue = append(queue, head.Left)
 		}
 		if head.Right != nil {
-			if head.Right.Val < head.Val {
+			if findMin(head.Right) < head.Val {
 				return false
 			}
 			queue = append(queue, head.Right)
